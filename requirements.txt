@@ -1,6 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 Flask==3.0.3
-torch==2.6.0
-torchvision==0.21.0
+torch==2.6.0+cpu
+torchvision==0.21.0+cpu
 numpy==1.26.4
 Pillow==10.3.0
 Werkzeug==3.0.3
