@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Admin Dashboard - Supabase Database Management</title>
+    <link rel="icon" type="image/x-icon" href="./static/icon/index.png">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Work+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#012d1d",
+                        "primary-container": "#1b4332",
+                        "on-primary-container": "#86af99",
+                        "secondary": "#1f6d1a",
+                        "secondary-container": "#a4f792",
+                        "on-secondary-container": "#267320",
+                        "surface": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "surface-container-high": "#e7e8e9",
+                        "on-surface": "#191c1d",
+                        "on-surface-variant": "#414844",
+                        "outline": "#717973",
+                        "outline-variant": "#c1c8c2",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6"
+                    },
+                    spacing: {
+                        "margin-desktop": "40px",
+                        "container-max": "1280px"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Work Sans"],
+                        "label-caps": ["JetBrains Mono"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+    <!-- Top Navigation Bar -->
+    <header class="bg-primary text-white w-full top-0 border-b border-outline-variant/30 z-50 sticky shadow-md">
+        <nav class="flex justify-between items-center px-margin-desktop py-3.5 max-w-container-max mx-auto">
+            <div class="flex items-center gap-3">
+                <a href="/"
+                    class="font-headline-lg text-xl font-bold flex items-center gap-2 hover:opacity-90 transition-opacity text-emerald-400">
+                    <span class="material-symbols-outlined text-emerald-400"
+                        style="font-variation-settings: 'FILL' 1;">eco</span>
+                    AgriGuard AI
+                </a>
+                <span
+                    class="bg-amber-400/20 text-amber-300 border border-amber-400/40 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">admin_panel_settings</span>
+                    ADMIN PANEL
+                </span>
+            </div>
+
+            <div class="flex items-center gap-5 text-sm">
+                <a href="/" class="text-gray-300 hover:text-white flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-outlined text-sm">add_a_photo</span>
+                    Scan Page
+                </a>
+                <a href="/dashboard" class="text-gray-300 hover:text-white flex items-center gap-1 transition-colors">
+                    <span class="material-symbols-outlined text-sm">person</span>
+                    User View
+                </a>
+                <div class="h-4 w-px bg-gray-600"></div>
+                <div
+                    class="flex items-center gap-2 bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-700/50">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="admin-user-email"
+                        class="text-xs font-mono font-bold text-emerald-200">admin123@gmail.com</span>
+                </div>
+                <a href="/logout"
+                    class="text-rose-300 hover:text-rose-100 font-bold text-xs bg-rose-950/60 border border-rose-800/40 px-3 py-1.5 rounded-full">
+                    Logout
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow max-w-container-max mx-auto px-margin-desktop w-full py-8">
+        <!-- Header Title & Supabase Status -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <span class="font-label-caps text-xs text-secondary uppercase tracking-wider font-bold">Supabase
+                    Database Administration</span>
+                <h1 class="font-headline-lg text-3xl font-bold text-primary mt-1">System Master Control & Analytics</h1>
+            </div>
+
+            <div id="db-health-badge"
+                class="flex items-center gap-3 bg-surface-container-lowest px-4 py-2 rounded-full border border-outline-variant shadow-sm text-xs font-bold">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="db-health-text" class="text-primary">Supabase Database Active</span>
+            </div>
+        </div>
+
+        <!-- System KPI Stats Cards -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div
+                class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm border-t-4 border-t-secondary">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-caps text-xs text-on-surface-variant uppercase font-bold">Total Registered
+                            Users</p>
+                        <h3 id="stat-total-users" class="font-headline-lg text-3xl font-bold text-secondary mt-2">0</h3>
+                    </div>
+                    <div class="p-3 bg-secondary-container rounded-lg text-on-secondary-container">
+                        <span class="material-symbols-outlined">group</span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm border-t-4 border-t-primary">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-caps text-xs text-on-surface-variant uppercase font-bold">Total Crop Scans
+                        </p>
+                        <h3 id="stat-total-scans" class="font-headline-lg text-3xl font-bold text-primary mt-2">0</h3>
+                    </div>
+                    <div class="p-3 bg-surface-container rounded-lg text-primary">
+                        <span class="material-symbols-outlined">dataset</span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm border-t-4 border-t-error">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-caps text-xs text-on-surface-variant uppercase font-bold">Diseased Ratio
+                        </p>
+                        <h3 id="stat-diseased-ratio" class="font-headline-lg text-3xl font-bold text-error mt-2">0%</h3>
+                    </div>
+                    <div class="p-3 bg-error-container rounded-lg text-on-error-container">
+                        <span class="material-symbols-outlined">coronavirus</span>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm border-t-4 border-t-amber-600">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-label-caps text-xs text-on-surface-variant uppercase font-bold">Avg Model
+                            Accuracy</p>
+                        <h3 id="stat-avg-confidence" class="font-headline-lg text-3xl font-bold text-amber-700 mt-2">0%
+                        </h3>
+                    </div>
+                    <div class="p-3 bg-amber-100 rounded-lg text-amber-800">
+                        <span class="material-symbols-outlined">analytics</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Tab Navigation -->
+        <div class="flex items-center gap-2 border-b border-outline-variant mb-6">
+            <button onclick="switchTab('users')" id="tab-users"
+                class="px-5 py-3 font-headline-lg font-bold text-sm border-b-2 border-primary text-primary flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">manage_accounts</span>
+                Supabase Users Table (<span id="count-users-badge">0</span>)
+            </button>
+            <button onclick="switchTab('scans')" id="tab-scans"
+                class="px-5 py-3 font-headline-lg font-medium text-sm text-on-surface-variant hover:text-primary flex items-center gap-2 border-b-2 border-transparent">
+                <span class="material-symbols-outlined text-lg">table_chart</span>
+                All Predictions Table (<span id="count-scans-badge">0</span>)
+            </button>
+        </div>
+
+        <!-- TAB 1: USERS DATABASE TABLE -->
+        <section id="panel-users" class="space-y-4">
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+                <div
+                    class="p-4 bg-surface border-b border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="relative w-full sm:w-80">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-lg">search</span>
+                        <input id="user-search" type="text" placeholder="Search user email or name..."
+                            onkeyup="renderUsersTable()"
+                            class="w-full pl-9 pr-4 py-2 border border-outline-variant rounded-lg text-xs bg-surface-container-lowest focus:outline-none focus:border-secondary" />
+                    </div>
+                    <span class="text-xs text-on-surface-variant font-mono">Database Source: <span
+                            class="font-bold text-primary">Supabase public.users</span></span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="bg-surface-container font-label-caps text-primary border-b border-outline-variant uppercase">
+                            <tr>
+                                <th class="p-4">User ID</th>
+                                <th class="p-4">User Email</th>
+                                <th class="p-4">Full Name</th>
+                                <th class="p-4">System Role</th>
+                                <th class="p-4">Created Date</th>
+                                <th class="p-4 text-right">Database Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody" class="divide-y divide-outline-variant/40">
+                            <tr>
+                                <td colspan="6" class="p-8 text-center text-on-surface-variant">Loading user records
+                                    from Supabase...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: ALL SCANS DATABASE TABLE -->
+        <section id="panel-scans" class="hidden space-y-4">
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+                <div
+                    class="p-4 bg-surface border-b border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="relative w-full sm:w-80">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-lg">search</span>
+                        <input id="scan-search" type="text" placeholder="Search disease or user email..."
+                            onkeyup="renderScansTable()"
+                            class="w-full pl-9 pr-4 py-2 border border-outline-variant rounded-lg text-xs bg-surface-container-lowest focus:outline-none focus:border-secondary" />
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="scan-health-filter" onchange="renderScansTable()"
+                            class="py-1.5 px-3 border border-outline-variant rounded-lg text-xs bg-surface">
+                            <option value="all">All Conditions</option>
+                            <option value="Healthy">Healthy Only</option>
+                            <option value="Diseased">Diseased Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead
+                            class="bg-surface-container font-label-caps text-primary border-b border-outline-variant uppercase">
+                            <tr>
+                                <th class="p-4">ID</th>
+                                <th class="p-4">User Email</th>
+                                <th class="p-4">Preview</th>
+                                <th class="p-4">Condition / Disease</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4">Confidence</th>
+                                <th class="p-4">Scan Date</th>
+                                <th class="p-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scans-tbody" class="divide-y divide-outline-variant/40">
+                            <tr>
+                                <td colspan="8" class="p-8 text-center text-on-surface-variant">Loading prediction
+                                    records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let adminData = { users: [], scans: [], stats: {} };
+        let activeTab = 'users';
+
+        async function fetchAdminData() {
+            try {
+                const res = await fetch('/api/admin/dashboard');
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    adminData = data;
+                    document.getElementById('admin-user-email').innerText = data.admin_user ? data.admin_user.email : 'admin123@gmail.com';
+
+                    document.getElementById('stat-total-users').innerText = data.stats.total_users || 0;
+                    document.getElementById('stat-total-scans').innerText = data.stats.total_scans || 0;
+                    document.getElementById('stat-diseased-ratio').innerText = (data.stats.diseased_ratio || 0) + '%';
+                    document.getElementById('stat-avg-confidence').innerText = (data.stats.avg_confidence || 0) + '%';
+
+                    document.getElementById('count-users-badge').innerText = (data.users || []).length;
+                    document.getElementById('count-scans-badge').innerText = (data.scans || []).length;
+
+                    renderUsersTable();
+                    renderScansTable();
+                }
+            } catch (err) {
+                console.error("Failed to load admin data:", err);
+            }
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            ['users', 'scans'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const panel = document.getElementById(`panel-${t}`);
+                if (t === tab) {
+                    btn.className = "px-5 py-3 font-headline-lg font-bold text-sm border-b-2 border-primary text-primary flex items-center gap-2";
+                    panel.classList.remove('hidden');
+                } else {
+                    btn.className = "px-5 py-3 font-headline-lg font-medium text-sm text-on-surface-variant hover:text-primary flex items-center gap-2 border-b-2 border-transparent";
+                    panel.classList.add('hidden');
+                }
+            });
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('users-tbody');
+            const search = document.getElementById('user-search').value.toLowerCase().trim();
+
+            let users = (adminData.users || []).filter(u => {
+                return !search || (u.email && u.email.toLowerCase().includes(search)) || (u.name && u.name.toLowerCase().includes(search));
+            });
+
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-on-surface-variant">No user records found in Supabase.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = users.map(u => {
+                const isAdmin = u.role === 'admin' || (u.email && u.email.toLowerCase() === 'admin123@gmail.com');
+                const roleBadge = isAdmin ?
+                    `<span class="bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-0.5 rounded-full font-bold text-[11px]">ADMIN</span>` :
+                    `<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full font-medium text-[11px]">USER</span>`;
+                const formattedDate = u.created_at ? new Date(u.created_at).toLocaleDateString() : 'N/A';
+
+                return `
+                <tr class="hover:bg-surface-container-low/60 transition-colors">
+                    <td class="p-4 font-mono font-semibold text-primary">${u.id || '-'}</td>
+                    <td class="p-4 font-bold text-primary">${u.email}</td>
+                    <td class="p-4">${u.name || '-'}</td>
+                    <td class="p-4">${roleBadge}</td>
+                    <td class="p-4 text-on-surface-variant">${formattedDate}</td>
+                    <td class="p-4 text-right space-x-2">
+                        <button onclick="toggleUserRole('${u.id}', '${isAdmin ? 'user' : 'admin'}')" class="px-3 py-1 rounded-lg text-[11px] font-bold border transition-colors ${isAdmin ? 'bg-surface-container hover:bg-outline-variant text-primary' : 'bg-primary text-white hover:bg-primary-container'}">
+                            ${isAdmin ? 'Demote to User' : 'Make Admin'}
+                        </button>
+                        <button onclick="deleteUser('${u.id}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-error-container text-on-error-container hover:bg-error hover:text-white transition-colors">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function renderScansTable() {
+            const tbody = document.getElementById('scans-tbody');
+            const search = document.getElementById('scan-search').value.toLowerCase().trim();
+            const healthFilter = document.getElementById('scan-health-filter').value;
+
+            let scans = (adminData.scans || []).filter(s => {
+                const matchFilter = healthFilter === 'all' || s.health_status === healthFilter;
+                const matchSearch = !search || (s.disease && s.disease.toLowerCase().includes(search)) || (s.user_email && s.user_email.toLowerCase().includes(search));
+                return matchFilter && matchSearch;
+            });
+
+            if (scans.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-on-surface-variant">No prediction history records found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = scans.map(s => {
+                const isHealthy = s.health_status === 'Healthy';
+                const statusBadge = isHealthy ?
+                    `<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold text-[10px]">Healthy</span>` :
+                    `<span class="bg-error-container text-on-error-container px-2 py-0.5 rounded-full font-bold text-[10px]">Diseased</span>`;
+                const formattedDate = s.created_at ? new Date(s.created_at).toLocaleString() : 'N/A';
+                const imageSrc = s.image_path ? (s.image_path.startsWith('http') ? s.image_path : '/' + s.image_path) : 'https://placehold.co/100x100?text=No+Img';
+
+                return `
+                <tr class="hover:bg-surface-container-low/60 transition-colors">
+                    <td class="p-4 font-mono text-on-surface-variant">#${s.id}</td>
+                    <td class="p-4 font-bold text-primary">${s.user_email || 'anonymous'}</td>
+                    <td class="p-4">
+                        <img src="${imageSrc}" alt="Scan" class="w-10 h-10 object-cover rounded-lg border border-outline-variant" />
+                    </td>
+                    <td class="p-4 font-bold text-primary">${(s.disease || '').replace(/_/g, ' ')}</td>
+                    <td class="p-4">${statusBadge}</td>
+                    <td class="p-4 font-mono font-semibold">${s.confidence}%</td>
+                    <td class="p-4 text-on-surface-variant text-[11px]">${formattedDate}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="deleteScan('${s.id}')" class="text-error hover:underline text-xs font-bold">
+                            Delete Record
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        async function toggleUserRole(userId, newRole) {
+            if (!confirm(`Change role of user #${userId} to ${newRole}?`)) return;
+            try {
+                const res = await fetch(`/api/admin/users/${userId}/role`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role: newRole })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    fetchAdminData();
+                }
+            } catch (err) {
+                console.error("Role update failed:", err);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm(`Are you sure you want to delete user #${userId} from Supabase?`)) return;
+            try {
+                const res = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    fetchAdminData();
+                }
+            } catch (err) {
+                console.error("Delete user failed:", err);
+            }
+        }
+
+        async function deleteScan(scanId) {
+            if (!confirm(`Delete scan record #${scanId}?`)) return;
+            try {
+                const res = await fetch(`/api/admin/history/${scanId}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    fetchAdminData();
+                }
+            } catch (err) {
+                console.error("Delete scan failed:", err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchAdminData);
+    </script>
+</body>
+
+</html>

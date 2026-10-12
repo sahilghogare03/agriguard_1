@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Sign In - AgriGuard AI</title>
+    <link rel="icon" type="image/x-icon" href="./static/icon/index.png">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Work+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#012d1d",
+                        "primary-container": "#1b4332",
+                        "on-primary-container": "#86af99",
+                        "secondary": "#1f6d1a",
+                        "secondary-container": "#a4f792",
+                        "on-secondary-container": "#267320",
+                        "surface": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "on-surface-variant": "#414844",
+                        "outline-variant": "#c1c8c2",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6"
+                    },
+                    spacing: {
+                        "margin-desktop": "40px",
+                        "container-max": "1280px"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Work Sans"],
+                        "label-caps": ["JetBrains Mono"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col justify-between">
+    <!-- Top Navigation Bar -->
+    <header class="bg-surface w-full top-0 border-b border-outline-variant z-50">
+        <nav class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+            <a href="/"
+                class="font-headline-lg text-2xl font-bold text-primary flex items-center gap-2 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-secondary"
+                    style="font-variation-settings: 'FILL' 1;">eco</span>
+                AgriGuard AI
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="/"
+                    class="text-on-surface-variant hover:text-primary font-medium flex items-center gap-1.5 text-sm transition-colors">
+                    <span class="material-symbols-outlined text-sm">home</span>
+                    Home
+                </a>
+                <a href="/register"
+                    class="bg-primary text-white px-5 py-2 rounded-full font-bold text-sm hover:bg-primary-container transition-colors">
+                    Sign Up
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-6">
+        <div
+            class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 max-w-md w-full shadow-xl space-y-6">
+            <div class="text-center space-y-2">
+                <div
+                    class="w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center mx-auto mb-3">
+                    <span class="material-symbols-outlined text-3xl">lock</span>
+                </div>
+                <h1 class="font-headline-lg text-2xl font-bold text-primary">Welcome Back</h1>
+                <p class="text-on-surface-variant text-sm">Sign in to manage your plant disease diagnostic dashboard</p>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="error-alert"
+                class="hidden p-4 rounded-xl bg-error-container text-on-error-container border border-error/30 text-xs font-medium flex items-center gap-2">
+                <span class="material-symbols-outlined text-error text-lg">error</span>
+                <span id="error-text">Invalid login credentials.</span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block font-label-caps text-xs text-primary mb-1.5 uppercase font-bold">Email
+                        Address</label>
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-xl">mail</span>
+                        <input id="email" type="email" required placeholder="farmer@example.com"
+                            class="w-full pl-10 pr-4 py-2.5 border border-outline-variant rounded-xl text-sm bg-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" />
+                    </div>
+                </div>
+
+                <div>
+                    <label
+                        class="block font-label-caps text-xs text-primary mb-1.5 uppercase font-bold">Password</label>
+                    <div class="relative">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-xl">key</span>
+                        <input id="password" type="password" required placeholder="••••••••"
+                            class="w-full pl-10 pr-10 py-2.5 border border-outline-variant rounded-xl text-sm bg-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" />
+                        <button type="button" onclick="togglePasswordVisibility()"
+                            class="absolute right-3 top-2.5 text-on-surface-variant hover:text-primary">
+                            <span id="visibility-icon" class="material-symbols-outlined text-xl">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <label class="flex items-center gap-2 cursor-pointer text-on-surface-variant">
+                        <input type="checkbox"
+                            class="rounded border-outline-variant text-secondary focus:ring-secondary" checked />
+                        Remember me
+                    </label>
+                    <a href="#"
+                        onclick="alert('Password reset link has been sent to your email if registered.'); return false;"
+                        class="text-secondary font-bold hover:underline">Forgot password?</a>
+                </div>
+
+                <button id="submit-btn" type="submit"
+                    class="w-full bg-primary text-white py-3 rounded-full font-bold hover:bg-primary-container transition-all flex items-center justify-center gap-2 shadow-md">
+                    <span>Sign In</span>
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </button>
+            </form>
+
+            <div class="text-center text-xs text-on-surface-variant border-t border-outline-variant/40 pt-4">
+                Don't have an account? <a href="/register" class="text-secondary font-bold hover:underline">Sign up for
+                    free</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 text-center text-xs text-on-surface-variant border-t border-outline-variant/30">
+        © 2026 AgriGuard AI. Secure Agricultural Intelligence.
+    </footer>
+
+    <script>
+        function togglePasswordVisibility() {
+            const pwd = document.getElementById('password');
+            const icon = document.getElementById('visibility-icon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.innerText = 'visibility_off';
+            } else {
+                pwd.type = 'password';
+                icon.innerText = 'visibility';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('required')) {
+                const alertBox = document.getElementById('error-alert');
+                const alertText = document.getElementById('error-text');
+                alertText.innerText = "🔒 Please sign in to view your History & Dashboard.";
+                alertBox.className = "p-4 rounded-xl bg-amber-50 text-amber-900 border border-amber-300 text-xs font-medium flex items-center gap-2 mb-4";
+                alertBox.classList.remove('hidden');
+            }
+        });
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('submit-btn');
+            const alertBox = document.getElementById('error-alert');
+            const alertText = document.getElementById('error-text');
+
+            alertBox.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = `<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Signing in...`;
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    alertText.innerText = data.error || "Invalid credentials.";
+                    alertBox.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.innerHTML = `<span>Sign In</span><span class="material-symbols-outlined text-lg">arrow_forward</span>`;
+                }
+            } catch (err) {
+                console.error("Login error:", err);
+                alertText.innerText = "Network error. Please try again.";
+                alertBox.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = `<span>Sign In</span><span class="material-symbols-outlined text-lg">arrow_forward</span>`;
+            }
+        }
+    </script>
+</body>
+
+</html>

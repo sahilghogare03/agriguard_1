@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AgriGuard AI - Precision Disease Detection</title>
+    <link rel="icon" type="image/x-icon" href="./static/icon/index.png">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Work+Sans:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2e3132",
+                        "surface-dim": "#d9dadb",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#c1ecd4",
+                        "secondary-container": "#a4f792",
+                        "surface": "#f8f9fa",
+                        "primary": "#012d1d",
+                        "on-secondary-fixed": "#002201",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-variant": "#e1e3e4",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface": "#191c1d",
+                        "tertiary-container": "#56340e",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "surface-bright": "#f8f9fa",
+                        "tertiary": "#3b1f00",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#002114",
+                        "background": "#f8f9fa",
+                        "outline-variant": "#c1c8c2",
+                        "inverse-primary": "#a5d0b9",
+                        "secondary-fixed": "#a4f792",
+                        "surface-tint": "#3f6653",
+                        "secondary-fixed-dim": "#89da79",
+                        "on-tertiary-container": "#cd9d6d",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "primary-container": "#1b4332",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#005303",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#1f6d1a",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#a5d0b9",
+                        "on-primary-container": "#86af99",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#414844",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#edeeef",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-fixed-variant": "#274e3d",
+                        "surface-container-high": "#e7e8e9",
+                        "on-background": "#191c1d",
+                        "outline": "#717973",
+                        "tertiary-fixed": "#ffdcbd",
+                        "on-secondary-container": "#267320"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "40px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "data-metric": ["Work Sans"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-sm": ["Work Sans"],
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Work Sans"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "display-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "data-metric": ["24px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+    <!-- Top Navigation Bar -->
+    <header class="bg-surface w-full top-0 border-b border-outline-variant z-50 sticky">
+        <nav class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+            <a href="/"
+                class="font-headline-lg text-headline-lg font-bold text-primary flex items-center gap-2 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-secondary"
+                    style="font-variation-settings: 'FILL' 1;">eco</span>
+                AgriGuard AI
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="/"
+                    class="text-primary font-bold border-b-2 border-secondary pb-1 flex items-center gap-1.5 text-body-sm">
+                    <span class="material-symbols-outlined text-sm">add_a_photo</span>
+                    New Scan
+                </a>
+                <a href="/history"
+                    class="text-on-surface-variant hover:text-primary font-medium flex items-center gap-1.5 text-body-sm transition-colors">
+                    <span class="material-symbols-outlined text-sm">history</span>
+                    Dashboard & History
+                </a>
+                <div id="auth-buttons" class="flex items-center gap-3">
+                    <a href="/login" class="text-secondary font-bold hover:underline text-sm">Sign In</a>
+                    <a href="/register"
+                        class="bg-primary text-white px-4 py-1.5 rounded-full font-bold text-sm hover:bg-primary-container">Sign
+                        Up</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="flex-grow max-w-container-max mx-auto px-margin-desktop w-full py-12">
+        <!-- Hero Section & Upload Area -->
+        <section class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div class="space-y-6">
+                <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Scientific
+                    Precision in Agriculture</span>
+                <h1 class="font-display-lg text-display-lg text-primary leading-tight">Identify Plant Diseases with AI
+                    Intelligence.</h1>
+                <p class="text-on-surface-variant font-body-md max-w-xl">
+                    Protect your crops with AgriGuard AI. Our deep-learning engine analyzes foliage symptoms in seconds,
+                    providing instant diagnoses and scientific treatment protocols.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <div
+                        class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant">
+                        <span class="material-symbols-outlined text-secondary text-sm"
+                            style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        <span class="text-body-sm font-medium">98% Accuracy</span>
+                    </div>
+                    <div
+                        class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant">
+                        <span class="material-symbols-outlined text-secondary text-sm"
+                            style="font-variation-settings: 'FILL' 1;">bolt</span>
+                        <span class="text-body-sm font-medium">Instant Analysis</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Upload Component -->
+            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 custom-shadow flex flex-col items-center justify-center min-h-[400px] transition-all duration-300"
+                id="upload-container">
+                <div class="w-full h-full border-2 border-dashed border-outline-variant rounded-lg flex flex-col items-center justify-center py-12 px-6 group hover:border-secondary transition-colors cursor-pointer bg-surface"
+                    id="drop-zone">
+                    <div
+                        class="w-20 h-20 rounded-full bg-secondary-container flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-on-secondary-container text-4xl">cloud_upload</span>
+                    </div>
+                    <h3 class="font-headline-lg-mobile text-primary mb-2">Upload Crop Image</h3>
+                    <p class="text-on-surface-variant text-center mb-8 max-w-xs">Drag and drop high-resolution photos of
+                        infected leaves or stems for analysis.</p>
+                    <input accept="image/*" class="hidden" id="file-input" type="file" />
+                    <button
+                        class="bg-primary-container text-on-primary-container px-8 py-3 rounded-full font-bold hover:bg-primary transition-all flex items-center gap-2"
+                        onclick="document.getElementById('file-input').click()">
+                        <span class="material-symbols-outlined">add_photo_alternate</span>
+                        Select Image
+                    </button>
+                    <p class="text-label-caps mt-4 text-on-surface-variant">Supported formats: JPG, PNG, WEBP (Max 10MB)
+                    </p>
+                </div>
+                <!-- Image Preview Card (Hidden initially) -->
+                <div class="hidden w-full space-y-6" id="preview-card">
+                    <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-outline-variant">
+                        <img class="w-full h-full object-cover"
+                            data-alt="A professional high-resolution macro photograph of a tomato leaf showing early signs of yellowing and spotting, set against a clean white laboratory background. The lighting is soft and even, highlighting the botanical details with scientific clarity. The aesthetic is modern, corporate, and functional, emphasizing precision and data-driven agriculture."
+                            id="image-preview"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhb5JgqnLZfe4VwRpsZixae6k_uz_v_OvDpoGYqj9Q4hXiXfghAiLv3pRo9dw_Eh2DwEiDid6jzbqJcAykLPq0_ymjkWgHAUL7xHBPYTkoUs7f3JUGtWujKIkvj4_yOoc2-PGfMNQEQSGSyZB4ydThGVOamL1_NIsBr1r6WXo5XmuRgw3IJHKOQbRT4_GA9ETnd2sx7rhLaqDZ01mwUHt7v1m0c75zmiakciwMy2P8XYtJQhX7IGhj3r0_Wvq79Eph5UADCS8ZRec" />
+                        <button
+                            class="absolute top-4 right-4 bg-error-container text-on-error-container w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                            id="clear-image">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-label-caps text-on-surface-variant uppercase">Ready for analysis</p>
+                            <p class="font-bold text-primary" id="file-name">leaf_sample_01.jpg</p>
+                        </div>
+                        <button
+                            class="bg-secondary text-on-secondary px-10 py-3 rounded-full font-bold hover:bg-on-secondary-fixed-variant transition-all flex items-center gap-2 shadow-lg"
+                            id="predict-btn">
+                            <span class="material-symbols-outlined">analytics</span>
+                            Predict
+                        </button>
+                    </div>
+                    <!-- Error Banner Card (Hidden initially) -->
+                    <div class="hidden w-full p-4 rounded-lg bg-error-container text-on-error-container border border-error flex items-start gap-3"
+                        id="error-banner">
+                        <span class="material-symbols-outlined text-error text-2xl">warning</span>
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-error">Image Validation Error</h4>
+                            <p class="text-body-sm mt-1" id="error-message">Invalid image uploaded.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Loading State (Hidden) -->
+        <div class="hidden flex flex-col items-center justify-center py-20" id="loading-state">
+            <div class="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="font-label-caps text-secondary animate-pulse">Running Neural Network Analysis...</p>
+        </div>
+        <!-- Results Section (Initially Hidden) -->
+        <section class="hidden space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700" id="results-section">
+            <div
+                class="border-t border-outline-variant pt-12 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="font-headline-lg text-primary mb-1">Diagnostic Results</h2>
+                    <p class="text-on-surface-variant text-sm">Validated by AgriGuard AI Core v4.2</p>
+                </div>
+                <button onclick="downloadPDFReport()"
+                    class="bg-secondary text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-emerald-800 transition-all flex items-center gap-2 shadow-md hover:shadow-lg self-start sm:self-auto">
+                    <span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+                    <span>Download PDF Diagnostic Report</span>
+                </button>
+            </div>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Data Metrics Panel -->
+                <div class="lg:col-span-1 space-y-4">
+                    <div
+                        class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 border-t-4 border-t-error">
+                        <span class="font-label-caps text-on-surface-variant">Health Status</span>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="material-symbols-outlined text-error"
+                                style="font-variation-settings: 'FILL' 1;">coronavirus</span>
+                            <span id="health-status" class="font-data-metric text-data-metric text-error">
+                                Diseased
+                            </span>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 border-t-4 border-t-secondary">
+                        <span class="font-label-caps text-on-surface-variant">Detected Condition</span>
+                        <span id="confidence" class="font-data-metric text-data-metric text-primary">
+                            0%
+                        </span>
+                        <p id="disease-name" class="text-body-sm text-on-surface-variant mt-1">Phytophthora infestans
+                        </p>
+                    </div>
+                    <div
+                        class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 border-t-4 border-t-primary">
+                        <span class="font-label-caps text-on-surface-variant">Confidence Level</span>
+                        <div class="flex items-center gap-4 mt-2">
+                            <span class="font-data-metric text-data-metric text-primary">98.4%</span>
+                            <div class="flex-grow bg-surface-container h-2 rounded-full overflow-hidden">
+                                <div id="confidence-bar" class="bg-primary h-full" style="width:0%"> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Treatment & Advisory -->
+                <div
+                    class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-8 custom-shadow">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-12 h-12 rounded-lg bg-primary-container flex items-center justify-center">
+                            <span class="material-symbols-outlined text-on-primary-container">medical_services</span>
+                        </div>
+                        <div>
+                            <h3 class="font-headline-lg-mobile text-primary">Recommended Treatment</h3>
+                            <p id="description" class="text-body-sm text-on-surface-variant">Actionable steps for
+                                recovery and prevention
+                            </p>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="font-label-caps text-primary mb-4 flex items-center gap-2">
+                                <span class="w-1 h-4 bg-secondary rounded-full"></span>
+                                IMMEDIATE ACTIONS
+                            </h4>
+                            <p id="treatment" class="text-on-surface">Prune and destroy infected leaves immediately.
+                                Apply copper-based fungicides.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-label-caps text-primary mb-4 flex items-center gap-2">
+                                <span class="w-1 h-4 bg-tertiary rounded-full"></span>
+                                LONG-TERM MANAGEMENT
+                            </h4>
+                            <div class="overflow-hidden border border-outline-variant rounded-lg p-4">
+                                <p id="prevention" class="text-on-surface">Maintain below 80% humidity. Select resistant
+                                    varieties next season.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-surface-container-highest w-full border-t border-outline-variant mt-20">
+        <div class="max-w-container-max mx-auto px-margin-desktop py-12">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+                <div class="space-y-4">
+                    <div class="font-label-caps text-label-caps text-on-surface-variant font-bold">AgriGuard AI</div>
+                    <p class="text-body-sm text-on-surface-variant max-w-xs">Building the future of sustainable and
+                        resilient agriculture through predictive intelligence.</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-8">
+                    <div class="flex flex-col gap-2">
+                        <p class="font-bold text-primary mb-2">Company</p>
+                        <a class="text-body-sm text-on-surface-variant hover:underline decoration-secondary transition-all"
+                            href="#">About Us</a>
+                        <a class="text-body-sm text-on-surface-variant hover:underline decoration-secondary transition-all"
+                            href="#">Research Papers</a>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <p class="font-bold text-primary mb-2">Legal</p>
+                        <a class="text-body-sm text-on-surface-variant hover:underline decoration-secondary transition-all"
+                            href="#">Privacy Policy</a>
+                        <a class="text-body-sm text-on-surface-variant hover:underline decoration-secondary transition-all"
+                            href="#">Terms of Service</a>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <p class="font-bold text-primary mb-2">Support</p>
+                        <a class="text-body-sm text-on-surface-variant hover:underline decoration-secondary transition-all"
+                            href="#">Contact Support</a>
+                        <a class="text-body-sm text-on-surface-variant hover:underline decoration-secondary transition-all"
+                            href="#">Documentation</a>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="pt-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 AgriGuard AI. Scientific Precision
+                    in Agriculture.</p>
+                <div class="flex gap-6">
+                    <span
+                        class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-secondary">public</span>
+                    <span
+                        class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-secondary">monitoring</span>
+                    <span
+                        class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-secondary">terminal</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
